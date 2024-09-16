@@ -57,17 +57,48 @@
 
     return {
       onMessage: ({ message, channelId }) => {
-        if (message.author.id !== selfUserId && socket.readyState === WebSocket.OPEN) {
-          const data = {
-            author: message.author.id,
-            author_name: message.author.username,
-            content: message.content,
-            time: message.timestamp,
-            channel: channelId
-          };
-          
-          console.log(JSON.stringify(message));
+        if (message.author.id != selfUserId && socket.readyState === WebSocket.OPEN) {
+        const data = {};
+        if (message.author && message.id) {
+          data.id = message.id;
+        }
+        if (message.author && message.author.id) {
+          data.author = message.author.id;
+        }
+        if (message.author && message.author.username) {
+          data.author_name = message.author.username;
+        }
+        if (message.member && message.member.nick) {
+          data.nickname = message.member.nick;
+        }
+        if (message.content) {
+          data.content = message.content;
+        }
+        if (message.timestamp) {
+          data.time = message.timestamp;
+        }
+        if (channelId) {
+          data.channel = channelId;
+        }
 
+
+         if (message.stickers && Array.isArray(message.stickers) && message.stickers.length > 0) {
+          const firstSticker = message.stickers[0];
+          data.sticker_id= firstSticker.id;
+          data.sticker_name = firstSticker.name;
+          console.log(data);
+        }
+
+        if(message.mentions && Array.isArray(message.mentions) && message.mentions.length > 0){
+          data.mentions = message.mentions;
+        }
+
+        if(message.attachments && Array.isArray(message.attachments) && message.attachments.length > 0){
+          data.attachments = message.attachments;
+          console.log(JSON.stringify(data));
+
+        }
+          
           if (listenChannelId.includes(channelId) || listenChannelId.length === 0) {
             socket.send(JSON.stringify(data));
           }
