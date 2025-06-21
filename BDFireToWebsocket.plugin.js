@@ -57,6 +57,9 @@
 
     return {
       onMessage: ({ message, channelId }) => {
+        if (message.author.id == selfUserId){
+            console.log(message)
+        }
         if (message.author.id != selfUserId && socket.readyState === WebSocket.OPEN) {
         const data = {};
         if (message.author && message.id) {
@@ -67,6 +70,8 @@
         }
         if (message.author && message.author.username) {
           data.author_name = message.author.username;
+          data.global_author_name = message.author.globalName;
+          data.avatar_id = message.author.avatar;
         }
         if (message.member && message.member.nick) {
           data.nickname = message.member.nick;
@@ -86,7 +91,7 @@
           const firstSticker = message.stickers[0];
           data.sticker_id= firstSticker.id;
           data.sticker_name = firstSticker.name;
-          console.log(data);
+          data.sticker_type = firstSticker.format_type;
         }
 
         if(message.mentions && Array.isArray(message.mentions) && message.mentions.length > 0){
@@ -95,8 +100,6 @@
 
         if(message.attachments && Array.isArray(message.attachments) && message.attachments.length > 0){
           data.attachments = message.attachments;
-          console.log(JSON.stringify(data));
-
         }
           
           if (listenChannelId.includes(channelId) || listenChannelId.length === 0) {
