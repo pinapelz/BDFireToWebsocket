@@ -2,15 +2,15 @@
    * @name BDFireToWebsocket
    * @author Pinapelz
    * @description Broadcasts messages from Discord to a WebSocket server
-   * @version 0.0.4
+   * @version 0.0.5
    */
 
   const { Webpack } = BdApi;
   const { Filters } = Webpack;
-  const Dispatcher = Webpack.getModule(Filters.byProps("isDispatching", "subscribe"));
+  const Dispatcher = Webpack.getModule(Filters.byKeys("isDispatching", "subscribe"));
 
   let socket;
-  let defaultWebSocketAddress = BdApi.loadData("AutoReplier", "webSocketAddress") || 'ws://localhost:8765';
+  let defaultWebSocketAddress = BdApi.Data.load("BDFireToWebSocket", "webSocketAddress") || 'ws://localhost:8765';
 
   function connectWebSocket() {
     if (socket) {
@@ -238,9 +238,9 @@
           cursor: 'pointer'
         });
         saveButton.addEventListener('click', () => {
-          BdApi.saveData(meta.name, 'listenChannelId', listenChannelId);
-          BdApi.saveData(meta.name, 'selfUserId', selfUserId);
-          BdApi.saveData(meta.name, 'webSocketAddress', webSocketAddress);
+          BdApi.Data.save(meta.name, 'listenChannelId', listenChannelId);
+          BdApi.Data.save(meta.name, 'selfUserId', selfUserId);
+          BdApi.Data.save(meta.name, 'webSocketAddress', webSocketAddress);
           BdApi.showToast('Settings saved', { type: 'success' });
         });
         panel.appendChild(saveButton);
