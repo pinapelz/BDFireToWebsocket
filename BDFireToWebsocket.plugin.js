@@ -2,13 +2,12 @@
    * @name BDFireToWebsocket
    * @author Pinapelz
    * @description Broadcasts messages from Discord to a WebSocket server
-   * @version 0.0.5
+   * @version 0.0.0.5
    */
 
   const { Webpack } = BdApi;
   const { Filters } = Webpack;
-  const Dispatcher = Webpack.getModule(Filters.byKeys("isDispatching", "subscribe"));
-
+  const Dispatcher = Webpack.getStore("MessageStore")._dispatcher;
   let socket;
   let defaultWebSocketAddress = BdApi.Data.load("BDFireToWebSocket", "webSocketAddress") || 'ws://localhost:8765';
 
